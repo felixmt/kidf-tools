@@ -4,7 +4,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="kidf_tools",
+    name="sql_tools",
     version="0.0.2",
     author="Félix Motot",
     author_email="felix@motot.fr",
