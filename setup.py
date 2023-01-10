@@ -11,8 +11,8 @@ setuptools.setup(
     description="Data processing toolkit for Keolis Ile-de-France",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    packages=setuptools.find_packages(),
-    include_package_data=True,
+    # packages=setuptools.find_packages(),
+    # include_package_data=True,
     # package_data={"static": ["theapp/static/swagger.json"]},
     # data_files=[("static", ["kidfapp/static/swagger.json"])],
     install_requires=[
