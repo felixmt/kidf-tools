@@ -1,52 +1,29 @@
-import setuptools
+from setuptools import setup, find_packages
 
-with open("README.md", "r", encoding="utf-8") as fh:
-    long_description = fh.read()
+VERSION = '0.0.1' 
+DESCRIPTION = 'My first Python package'
+LONG_DESCRIPTION = 'My first Python package with a slightly longer description'
 
-setuptools.setup(
-    name="sql_tools",
-    version="0.0.2",
-    author="Félix Motot",
-    author_email="felix@motot.fr",
-    description="Data processing toolkit for Keolis Ile-de-France",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    # packages=setuptools.find_packages(),
-    # include_package_data=True,
-    # package_data={"static": ["theapp/static/swagger.json"]},
-    # data_files=[("static", ["kidfapp/static/swagger.json"])],
-    install_requires=[
-        # production deployment
-        # "wheel",
-        # "waitress",
-        # "flask",
-        # "flask-swagger-ui",
-        # "requests",
-        # "psycopg2-binary",
-        # "psycopg2",
-        # "pytz",
-        # "python-dotenv",
-        # "pyproj",
-        # "unidecode",
-        # ### timetables
-        # "pandas==1.4.1",
-        # "numpy==1.22.1",
-        # "openpyxl==3.0.9",
-        # "sqlalchemy",
-        # # "gdal",
-        # # "geopandas",
-        # # linter
-        # "pylint",
-        # "pylint-flask",
-        # "pylint-flask-sqlalchemy",
-        # # testing
-        # "pytest",
-        # "pytest-cov",
-    ],
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-    ],
-    python_requires='>=3.8',
+# Setting up
+setup(
+       # the name must match the folder name 'verysimplemodule'
+        name="verysimplemodule", 
+        version=VERSION,
+        author="Jason Dsouza",
+        author_email="<youremail@email.com>",
+        description=DESCRIPTION,
+        long_description=LONG_DESCRIPTION,
+        packages=find_packages(),
+        install_requires=[], # add any additional packages that 
+        # needs to be installed along with your package. Eg: 'caer'
+        
+        keywords=['python', 'first package'],
+        classifiers= [
+            "Development Status :: 3 - Alpha",
+            "Intended Audience :: Education",
+            "Programming Language :: Python :: 2",
+            "Programming Language :: Python :: 3",
+            "Operating System :: MacOS :: MacOS X",
+            "Operating System :: Microsoft :: Windows",
+        ]
 )
