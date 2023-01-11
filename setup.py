@@ -15,12 +15,12 @@ setup(
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
         install_requires=[
-            # "shapely",
-            # "dotenv",
-            # "psycopg2",
+            "os",
+            "dotenv",
             "pandas",
+            # "shapely",
+            # "psycopg2",
             # "geopandas",
-            # "os",
             # "sqlalchemy",
         ], # add any additional packages that 
         # needs to be installed along with your package. Eg: 'caer'
