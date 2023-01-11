@@ -1,2 +1,3 @@
-def add(number):
-    return number + 1
+class add:
+    def add(number):
+        return number + 1
