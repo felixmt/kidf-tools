@@ -18,7 +18,7 @@ setup(
             # "shapely",
             # "dotenv",
             # "psycopg2",
-            # "pandas",
+            "pandas",
             # "geopandas",
             # "os",
             # "sqlalchemy",
