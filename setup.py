@@ -17,10 +17,10 @@ setup(
         install_requires=[
             "python-dotenv",
             "pandas",
-            # "shapely",
-            # "psycopg2",
-            # "geopandas",
-            # "sqlalchemy",
+            "shapely",
+            "psycopg2",
+            "geopandas",
+            "sqlalchemy",
         ], # add any additional packages that 
         # needs to be installed along with your package. Eg: 'caer'
         
