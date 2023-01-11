@@ -1,3 +1,3 @@
 class add:
-    def add(number):
+    def add(self, number):
         return number + 1
