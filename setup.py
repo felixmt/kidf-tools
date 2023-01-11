@@ -1,16 +1,16 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.1' 
-DESCRIPTION = 'My first Python package'
-LONG_DESCRIPTION = 'My first Python package with a slightly longer description'
+VERSION = '0.0.1'
+DESCRIPTION = 'Félix Motot python dependencies to deal with data'
+LONG_DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 
 # Setting up
 setup(
        # the name must match the folder name 'verysimplemodule'
-        name="verysimplemodule", 
+        name="tools", 
         version=VERSION,
-        author="Jason Dsouza",
-        author_email="<youremail@email.com>",
+        author="Félix Motot",
+        author_email="<felix@motot.fr>",
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
