@@ -16,6 +16,19 @@ class file_helper:
         self.output_folder: str = str(os.getenv('OUTPUT_FOLDER'))
         self.log_manager = log_helper()
 
+    def read_file_to_dataframe(
+        self, file_path: str, file_extension: str, worksheet_name: str, separator: str = ","):
+        """files to dataframe
+        """
+        if file_extension == "csv":
+            return pd.read_csv(file_path, separator)
+        elif file_extension == "xlsx":
+            return pd.read_excel(file_path, worksheet_name)
+        else:
+            raise BaseException(
+                        "File_extension error : " + file_extension + " is not recognized. ")\
+                        from None
+
     def write_csv(self, header: str, content: list):
         """csv file writer
         """
