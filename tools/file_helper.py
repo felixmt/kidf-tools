@@ -2,7 +2,6 @@
 """
 import os
 import uuid
-from flask import send_file
 import openpyxl
 from dotenv import load_dotenv
 import pandas as pd
@@ -90,15 +89,15 @@ class file_helper:
 
         return self.get_file(file_name, file_extension)
 
-    def get_file(self, file_path: str, file_extension: str):
-        """returns file from file_path
-        """
-        # send_from_directory only takes relative paths
-        # return send_from_directory(self.output_folder, "."
-        #         , filename=file_path + "." + file_extension, as_attachment=True)
-        file_name = file_path + "." + file_extension
-        try:
-            return send_file(self.output_folder + "/" + file_name
-                    , file_name, as_attachment=True)
-        except FileNotFoundError as error:
-            self.log_manager.set_error("Problem while getting file : " + str(error))
+    # def get_file(self, file_path: str, file_extension: str):
+    #     """returns file from file_path
+    #     """
+    #     # send_from_directory only takes relative paths
+    #     # return send_from_directory(self.output_folder, "."
+    #     #         , filename=file_path + "." + file_extension, as_attachment=True)
+    #     file_name = file_path + "." + file_extension
+    #     try:
+    #         return send_file(self.output_folder + "/" + file_name
+    #                 , file_name, as_attachment=True)
+    #     except FileNotFoundError as error:
+    #         self.log_manager.set_error("Problem while getting file : " + str(error))

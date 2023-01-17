@@ -7,7 +7,7 @@ LONG_DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 # Setting up
 setup(
        # the name must match the folder name 'verysimplemodule'
-        name="tools", 
+        name="tools",
         version=VERSION,
         author="Félix Motot",
         author_email="<felix@motot.fr>",
