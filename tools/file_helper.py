@@ -17,12 +17,14 @@ class file_helper:
         self.log_manager = log_helper()
 
     def read_file_to_dataframe(
-        self, file_path: str, file_extension: str, worksheet_name: str, separator: str = ","):
+        self, file_path: str, file_extension: str, worksheet_name: str = "", separator: str = ","):
         """files to dataframe
         """
         if file_extension == "csv":
             return pd.read_csv(file_path, separator)
         elif file_extension == "xlsx":
+            if worksheet_name != "":
+                return pd.read_excel(file_path)
             return pd.read_excel(file_path, worksheet_name)
         else:
             raise BaseException(
