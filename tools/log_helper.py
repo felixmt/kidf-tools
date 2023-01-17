@@ -10,7 +10,9 @@ class log_helper:
     """
     def __init__(self):
         load_dotenv()
-        self.logging_folder = os.getenv('LOGGING_FOLDER')
+        self.logging_folder = os.getenv('LOGGING_FOLDER')\
+                    if os.getenv('LOGGING_FOLDER') is not None\
+                    else "./"
         self.current_datetime = datetime.now(timezone.utc)
         self.FORMAT = "%(asctime)-15s %(levelname)s %(message)s"
         self.FILEMODE = "a"

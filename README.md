@@ -1,4 +1,7 @@
 # kidf-tools
+
+## /!\ requires python 3.10
+
 ## build package :
 python3 setup.py sdist bdist_wheel
 python3 setup.py sdist bdist_wheel && git add -A && git commit -m "commit" && git push -u origin main
