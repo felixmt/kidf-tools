@@ -22,6 +22,7 @@ setup(
             "geopandas",
             "sqlalchemy",
             "openpyxl",
+            "requests",
         ], # add any additional packages that
         # needs to be installed along with your package. Eg: 'caer'
 
