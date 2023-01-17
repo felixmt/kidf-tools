@@ -1,0 +1,47 @@
+# https://github.com/microsoft/vscode-python/issues/11909
+[MASTER]
+init-hook='import sys; import dotenv; sys.path.append("./kidfapp")'
+# Use multiple processes to speed up Pylint.
+jobs=2
+
+[FORMAT]
+class-naming-style=snake_case
+max-line-length=100
+# Maximum number of lines in a module
+max-module-lines=1000
+# Number of spaces of indent required inside a hanging  or continued line.
+indent-after-paren=4
+indent-string='    '
+# Expected format of line ending, e.g. empty (any line ending), LF or CRLF.
+expected-line-ending-format=LF
+
+[DESIGN]
+# Maximum number of arguments for function / method
+max-args=10
+
+# Maximum number of attributes for a class (see R0902).
+max-attributes=20
+
+# Maximum number of boolean expressions in a if statement
+max-bool-expr=4
+
+# Maximum number of branch for function / method body
+max-branches=40
+
+# Maximum number of locals for function / method body
+max-locals=60
+
+# Maximum number of parents for a class (see R0901).
+max-parents=7
+
+# Maximum number of public methods for a class (see R0904).
+max-public-methods=20
+
+# Maximum number of return / yield for function / method body
+max-returns=6
+
+# Maximum number of statements in function / method body
+max-statements=100
+
+# Minimum number of public methods for a class (see R0903).
+min-public-methods=0
