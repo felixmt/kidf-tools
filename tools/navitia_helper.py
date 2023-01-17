@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 import requests
 from tools.log_helper import log_helper
 
-class navitia_service:
+class navitia_helper:
     """ Service to deal with Navitia API
     """
     def __init__(self):
