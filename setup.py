@@ -21,6 +21,7 @@ setup(
             "psycopg2",
             "geopandas",
             "sqlalchemy",
+            "openpyxl",
         ], # add any additional packages that
         # needs to be installed along with your package. Eg: 'caer'
 

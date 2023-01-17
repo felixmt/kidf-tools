@@ -12,7 +12,8 @@ class file_helper:
     """
     def __init__(self):
         load_dotenv()
-        self.output_folder: str = str(os.getenv('OUTPUT_FOLDER'))
+        self.output_folder: str = str(os.getenv('OUTPUT_FOLDER'))\
+            if os.getenv('OUTPUT_FOLDER') is not None else "./"
         self.log_manager = log_helper()
 
     def read_file_to_dataframe(
@@ -89,9 +90,10 @@ class file_helper:
 
         return self.get_file(file_name, file_extension)
 
-    # def get_file(self, file_path: str, file_extension: str):
-    #     """returns file from file_path
-    #     """
+    def get_file(self, file_path: str, file_extension: str):
+        """returns file from file_path
+        """
+        print("to be finalized")
     #     # send_from_directory only takes relative paths
     #     # return send_from_directory(self.output_folder, "."
     #     #         , filename=file_path + "." + file_extension, as_attachment=True)
