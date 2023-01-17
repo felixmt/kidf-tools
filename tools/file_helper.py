@@ -23,7 +23,7 @@ class file_helper:
         if file_extension == "csv":
             return pd.read_csv(file_path, separator)
         elif file_extension == "xlsx":
-            if worksheet_name != "":
+            if worksheet_name == "":
                 return pd.read_excel(file_path)
             return pd.read_excel(file_path, worksheet_name)
         else:
