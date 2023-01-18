@@ -9,6 +9,7 @@ import psycopg2
 from psycopg2.extras import execute_values
 import pandas as pd
 import geopandas as gpd
+import pyyaml
 from tools.log_helper import log_helper
 
 class sql_helper:
@@ -122,7 +123,7 @@ class sql_helper:
         @returns: dataframe
         """
 
-        connection = self.get_connection_alchemy()
+        connection = self.get_connection("alchemy")
         query_formatted = self.format_query(query, False)
         try:
             if is_geodataframe:
@@ -236,7 +237,7 @@ class sql_helper:
         """select into pandas dataframe
         @returns: None
         """
-        connection = self.get_connection_alchemy()
+        connection = self.get_connection("alchemy")
         try:
             if is_geodataframe:
                 df_data.set_geometry(geometry_column)
