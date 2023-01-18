@@ -124,6 +124,7 @@ class sql_helper:
         finally:
             # closing database connection.
             if connection:
+                connection.commit()
                 if cursor:
                     cursor.close()
                 connection.close()
