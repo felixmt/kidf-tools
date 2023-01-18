@@ -14,27 +14,25 @@ class log_helper:
                     if os.getenv('LOGGING_FOLDER') is not None\
                     else "."
         self.current_datetime = datetime.now(timezone.utc)
-        self.FORMAT = "%(asctime)-15s %(levelname)s %(message)s"
-        self.FILEMODE = "a"
+        self.format = "%(asctime)-15s %(levelname)s %(message)s"
+        self.filemode = "a"
 
     def set_error(self, message: str, log_file: str = "api_run"):
         """log errors
         """
-        LOGFILE = self.logging_folder + "/" + log_file + "_" \
+        logfile = self.logging_folder + "/" + log_file + "_" \
                         + self.current_datetime.strftime("%Y%m%d") + ".log"
-        logging.basicConfig(format=self.FORMAT, level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
-                    filename = LOGFILE, filemode = self.FILEMODE)
+        logging.basicConfig(format=self.format, level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
+                    filename = logile, filemode = self.filemode)
         logging.error(message)
-
-        print(LOGFILE)
 
     def set_info(self, message: str, log_file: str = "api_run"):
         """log errors
         """
-        LOGFILE = self.logging_folder + "/" + log_file + "_" \
+        logfile = self.logging_folder + "/" + log_file + "_" \
                         + self.current_datetime.strftime("%Y%m%d") + ".log"
-        logging.basicConfig(format=self.FORMAT, level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
-                    filename = LOGFILE, filemode = self.FILEMODE)
+        logging.basicConfig(format=self.format, level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
+                    filename = logfile, filemode = self.filemode)
         logging.info(message)
 
     def set_warning(self, message: str,):
