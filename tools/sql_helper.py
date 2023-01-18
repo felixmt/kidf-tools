@@ -29,63 +29,52 @@ class sql_helper:
         self.db_schema_keoreport=os.getenv('DB_SCHEMA_KEOREPORT')
         self.log_manager = log_helper()
 
-    def get_connection(self):
+    def get_connection(self, connection_type: str = "psycopg2"):
         """initialize connection
         @returns: connection
         """
         try:
-            if self.db_env is not None and self.db_env == "keoreport":
-                connection = psycopg2.connect(user=os.getenv('DB_KEOREPORT_USER'),
-                                            password=os.getenv('DB_KEOREPORT_PASSWORD'),
-                                            host=os.getenv('DB_KEOREPORT_HOSTNAME'),
-                                            port=os.getenv('DB_KEOREPORT_PORT'),
-                                            database=os.getenv('DB_KEOREPORT_NAME')
-                                            # , connect_timeout=1
-                                            )
+            if os.getenv("DB_" + self.db_env + "_HOSTNAME") is None:
+                with open('.env.yml') as f:
+                    env = yaml.load(f, Loader=SafeLoader)
+                    database = env['databases'][self.db_env]
             else:
-                connection = psycopg2.connect(user=os.getenv('DB_USER'),
-                                            password=os.getenv('DB_PASSWORD'),
-                                            host=os.getenv('DB_HOSTNAME'),
-                                            port=os.getenv('DB_PORT'),
-                                            database=os.getenv('DB_NAME')
+                database['user'] = os.getenv("DB_" + self.db_env + "_USER"),
+                database['password'] = os.getenv("DB_" + self.db_env + "_PASSWORD"),
+                database['host'] = os.getenv("DB_" + self.db_env + "_HOSTNAME"),
+                database['port'] = os.getenv("DB_" + self.db_env + "_PORT"),
+                database['name'] = os.getenv("DB_" + self.db_env + "_NAME")
+                
+            if connection_type == "alchemy":
+                db_uri: str = "postgresql+psycopg2://"
+                db_uri = db_uri + \
+                            str(database['user']) + ":" + \
+                            str(database['password']) + "@" + \
+                            str(database['host']) + ":" + \
+                            str(database['port']) + "/" + \
+                            str(database['name'])
+
+                return create_engine(db_uri, echo=True)
+            else:
+                connection = psycopg2.connect(user=database['user'],
+                                            password=database['password'],
+                                            host=database['host'],
+                                            port=database['port'],
+                                            database=database['name']
                                             # , connect_timeout=1
                                             )
+
+                return connection
         except psycopg2.Error as error:
+            self.log_manager.set_error("psycopg2 : Connection error (PostgreSQL) : " \
+                        + str(error))
+            raise ConnectionError(str("psycopg2 : Connection to the database could not be established"))\
+                        from None
+        except BaseException as error:
             self.log_manager.set_error("Connection error (PostgreSQL) : " \
                         + str(error))
             raise ConnectionError(str("Connection to the database could not be established"))\
                         from None
-
-        return connection
-
-    def get_connection_alchemy(self):
-        """initialize connection
-        @returns: connection
-        """
-        db_uri: str = "postgresql+psycopg2://"
-        try:
-            if self.db_env is not None and self.db_env == "keoreport":
-                db_uri = db_uri + \
-                            str(os.getenv('DB_KEOREPORT_USER')) + ":" + \
-                            str(os.getenv('DB_KEOREPORT_PASSWORD')) + "@" + \
-                            str(os.getenv('DB_KEOREPORT_HOSTNAME')) + ":" + \
-                            str(os.getenv('DB_KEOREPORT_PORT')) + "/" + \
-                            str(os.getenv('DB_KEOREPORT_NAME'))
-
-            else:
-                db_uri = db_uri + \
-                            str(os.getenv('DB_USER')) + ":" + \
-                            str(os.getenv('DB_PASSWORD')) + "@" + \
-                            str(os.getenv('DB_HOSTNAME')) + ":" + \
-                            str(os.getenv('DB_PORT')) + "/" + \
-                            str(os.getenv('DB_NAME'))
-        except psycopg2.Error as error:
-            self.log_manager.set_error("Connection error (PostgreSQL) : " \
-                        + str(error))
-            raise ConnectionError(str("Connection to the database could not be established"))\
-                        from None
-
-        return create_engine(db_uri, echo=True)
 
     def select(self, query: str, params: list|dict, params_as_array: bool = True
                 , return_sql_as_text: bool = False):
