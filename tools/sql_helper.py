@@ -18,7 +18,7 @@ class sql_helper:
     """
     def __init__(self, db_env: str = ""):
         load_dotenv()
-        self.db_env = db_env if db_env != "" else None
+        self.db_env = db_env
         self.db_schema=os.getenv('DB_SCHEMA')
         self.db_schema_gps_data=os.getenv('DB_SCHEMA_GPS_DATA')
         self.db_schema_sig=os.getenv('DB_SCHEMA_SIG')
