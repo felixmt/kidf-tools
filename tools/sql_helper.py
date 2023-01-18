@@ -9,7 +9,8 @@ import psycopg2
 from psycopg2.extras import execute_values
 import pandas as pd
 import geopandas as gpd
-import pyyaml
+import yaml
+from yaml.loader import SafeLoader
 from tools.log_helper import log_helper
 
 class sql_helper:
