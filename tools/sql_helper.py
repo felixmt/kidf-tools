@@ -36,17 +36,25 @@ class sql_helper:
         @returns: connection
         """
         try:
-            if os.getenv("DB_" + self.db_env + "_HOSTNAME") is None:
+            db_prefix = "DB" + ("_" if self.db_env != "" else "") + self.db_env
+            if os.getenv(db_prefix + "_HOSTNAME") is None:
                 with open('.env.yml') as f:
                     env = yaml.load(f, Loader=SafeLoader)
                     database = env['databases'][self.db_env]
             else:
-                database['user'] = os.getenv("DB_" + self.db_env + "_USER"),
-                database['password'] = os.getenv("DB_" + self.db_env + "_PASSWORD"),
-                database['host'] = os.getenv("DB_" + self.db_env + "_HOSTNAME"),
-                database['port'] = os.getenv("DB_" + self.db_env + "_PORT"),
-                database['name'] = os.getenv("DB_" + self.db_env + "_NAME")
-                
+                database = {}
+                database['user'] = os.getenv(db_prefix + "_USER")
+                database['password'] = os.getenv(db_prefix + "_PASSWORD")
+                database['host'] = os.getenv(db_prefix + "_HOSTNAME")
+                database['port'] = os.getenv(db_prefix + "_PORT")
+                database['name'] = os.getenv(db_prefix + "_NAME")
+        except BaseException as error:
+            self.log_manager.set_error("Connection error (postgreSQL) : could not read connection information. " \
+                        + str(error))
+            raise ConnectionError(str("Connection error (postgreSQL) : could not read connection information."))\
+                        from None
+
+        try:
             if connection_type == "alchemy":
                 db_uri: str = "postgresql+psycopg2://"
                 db_uri = db_uri + \
@@ -77,6 +85,7 @@ class sql_helper:
                         + str(error))
             raise ConnectionError(str("Connection to the database could not be established"))\
                         from None
+
 
     def select(self, query: str, params: list|dict, params_as_array: bool = True
                 , return_sql_as_text: bool = False):
