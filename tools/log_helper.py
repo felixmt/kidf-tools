@@ -23,7 +23,7 @@ class log_helper:
         logfile = self.logging_folder + "/" + log_file + "_" \
                         + self.current_datetime.strftime("%Y%m%d") + ".log"
         logging.basicConfig(format=self.format, level=logging.INFO, datefmt='%Y-%m-%d %H:%M:%S',
-                    filename = logile, filemode = self.filemode)
+                    filename = logfile, filemode = self.filemode)
         logging.error(message)
 
     def set_info(self, message: str, log_file: str = "api_run"):
