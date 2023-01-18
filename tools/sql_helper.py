@@ -124,7 +124,6 @@ class sql_helper:
         finally:
             # closing database connection.
             if connection:
-                connection.commit()
                 if cursor:
                     cursor.close()
                 connection.close()
@@ -146,29 +145,6 @@ class sql_helper:
             self.log_manager.set_error(str(query_formatted))
             self.log_manager.set_error(" ".join(str(item) for item in params))
             raise BaseException("select into dataframe error (PostgreSQL) : " +\
-                        str(error)) from None
-        # finally:
-        #     # closing database connection.
-        #     if connection:
-        #         connection.close()
-
-    def insert_from_dataframe(self, schema_name: str, table_name: str,
-                df_data, is_geodataframe = False, geometry_column: str = "geom",
-                crs: str = "4326"):
-        """select into pandas dataframe
-        @returns: None
-        """
-        connection = self.get_connection_alchemy()
-        try:
-            if is_geodataframe:
-                df_data.set_geometry(geometry_column)
-                df_data.set_crs(epsg=crs)
-                df_data.to_postgis(table_name, connection, schema=schema_name, if_exists='replace')
-            else:
-                df_data.to_sql(table_name, connection, schema=schema_name, if_exists='replace')
-        except psycopg2.Error as error:
-            self.log_manager.set_error("Insert from dataframe error (PostgreSQL) : " + str(error))
-            raise BaseException("Insert from dataframe error (PostgreSQL) : " +\
                         str(error)) from None
         # finally:
         #     # closing database connection.
@@ -237,6 +213,57 @@ class sql_helper:
                     cursor.close()
                 connection.close()
 
+    def insert_batch(self, query: str, tuples: list):
+        """insert a batch of data
+        @returns: void
+        """
+        connection = self.get_connection()
+        cursor = connection.cursor()
+        try:
+            execute_values(cursor, query, tuples)
+
+            connection.commit()
+
+        except psycopg2.Error as error:
+            self.log_manager.set_error("Insert batch psycopg2 error (PostgreSQL) : " + str(error))
+            self.log_manager.set_error(query)
+            # self.log_manager.set_error(str(tuples))
+            raise BaseException("Insert batch psycopg2 error (PostgreSQL) : " \
+                        + str(error)) from None
+        except BaseException as error:
+            self.log_manager.set_error("Insert batch other error (PostgreSQL) : " + str(error))
+            self.log_manager.set_error(query)
+            raise BaseException("Insert batch other error (PostgreSQL) : " + str(error)) from None
+        finally:
+            # closing database connection.
+            if connection:
+                if cursor:
+                    cursor.close()
+                connection.close()
+
+    def insert_from_dataframe(self, schema_name: str, table_name: str,
+                df_data, is_geodataframe = False, geometry_column: str = "geom",
+                crs: str = "4326"):
+        """select into pandas dataframe
+        @returns: None
+        """
+        connection = self.get_connection_alchemy()
+        try:
+            if is_geodataframe:
+                df_data.set_geometry(geometry_column)
+                df_data.set_crs(epsg=crs)
+                df_data.to_postgis(table_name, connection, schema=schema_name, if_exists='replace')
+            else:
+                df_data.to_sql(table_name, connection, schema=schema_name, if_exists='replace')
+        except psycopg2.Error as error:
+            self.log_manager.set_error("Insert from dataframe error (PostgreSQL) : " + str(error))
+            raise BaseException("Insert from dataframe error (PostgreSQL) : " +\
+                        str(error)) from None
+        # finally:
+        #     # closing database connection.
+        #     if connection:
+        #         connection.close()
+    
     def create(self, schema_name: str, table_name: str, columns: list):
         """create table
         @returns: void
@@ -270,34 +297,6 @@ class sql_helper:
             self.log_manager.set_error(" ".join(str(item) for item in columns))
             raise BaseException("Create table error (PostgreSQL) : " + str(error)) from None
 
-        finally:
-            # closing database connection.
-            if connection:
-                if cursor:
-                    cursor.close()
-                connection.close()
-
-    def insert_batch(self, query: str, tuples: list):
-        """insert a batch of data
-        @returns: void
-        """
-        connection = self.get_connection()
-        cursor = connection.cursor()
-        try:
-            execute_values(cursor, query, tuples)
-
-            connection.commit()
-
-        except psycopg2.Error as error:
-            self.log_manager.set_error("Insert batch psycopg2 error (PostgreSQL) : " + str(error))
-            self.log_manager.set_error(query)
-            # self.log_manager.set_error(str(tuples))
-            raise BaseException("Insert batch psycopg2 error (PostgreSQL) : " \
-                        + str(error)) from None
-        except BaseException as error:
-            self.log_manager.set_error("Insert batch other error (PostgreSQL) : " + str(error))
-            self.log_manager.set_error(query)
-            raise BaseException("Insert batch other error (PostgreSQL) : " + str(error)) from None
         finally:
             # closing database connection.
             if connection:
