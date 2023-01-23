@@ -22,7 +22,8 @@ class file_helper:
         file_extension: str,
         worksheet_name: str = "",
         separator: str = ",",
-        encoding: str = ""):
+        encoding: str = "",
+        xlsx_header: int = 0):
         """files to dataframe
         """
         if file_extension == "csv":
@@ -32,7 +33,7 @@ class file_helper:
         elif file_extension == "xlsx":
             if worksheet_name == "":
                 return pd.read_excel(file_path)
-            return pd.read_excel(file_path, worksheet_name)
+            return pd.read_excel(file_path, worksheet_name, header=xlsx_header)
         else:
             raise BaseException(
                         "File_extension error : " + file_extension + " is not recognized. ")\
