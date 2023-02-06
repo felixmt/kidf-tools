@@ -243,7 +243,7 @@ class sql_helper:
 
     def insert_from_dataframe(self, schema_name: str, table_name: str,
                 df_data, is_geodataframe = False, geometry_column: str = "geom",
-                crs: str = "4326"):
+                crs: str = "4326", if_exists="replace", chunk_size=10000):
         """select into pandas dataframe
         @returns: None
         """
@@ -252,9 +252,11 @@ class sql_helper:
             if is_geodataframe:
                 df_data.set_geometry(geometry_column)
                 df_data.set_crs(epsg=crs)
-                df_data.to_postgis(table_name, connection, schema=schema_name, if_exists='replace')
+                df_data.to_postgis(table_name, connection, schema=schema_name, if_exists=if_exists,\
+                            index=False, chunksize=chunk_size, method="multi")
             else:
-                df_data.to_sql(table_name, connection, schema=schema_name, if_exists='replace')
+                df_data.to_sql(table_name, connection, schema=schema_name, if_exists=if_exists,\
+                            index=False, chunksize=chunk_size, method="multi")
         except psycopg2.Error as error:
             self.log_manager.set_error("Insert from dataframe error (PostgreSQL) : " + str(error))
             raise BaseException("Insert from dataframe error (PostgreSQL) : " +\
