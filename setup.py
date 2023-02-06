@@ -20,7 +20,7 @@ setup(
             "shapely",
             "psycopg2",
             "geopandas",
-            "sqlalchemy",
+            "sqlalchemy<2",
             "openpyxl",
             "requests",
             "pyyaml"
