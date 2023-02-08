@@ -67,18 +67,17 @@ class sql_helper:
                             str(database['host']) + ":" + \
                             str(database['port']) + "/" + \
                             str(database['name'])
-
                 return create_engine(db_uri, echo=True)
-            else:
-                connection = psycopg2.connect(user=database['user'],
-                                            password=database['password'],
-                                            host=database['host'],
-                                            port=database['port'],
-                                            database=database['name']
-                                            # , connect_timeout=1
-                                            )
 
-                return connection
+            connection = psycopg2.connect(user=database['user'],
+                                        password=database['password'],
+                                        host=database['host'],
+                                        port=database['port'],
+                                        database=database['name']
+                                        # , connect_timeout=1
+                                        )
+
+            return connection
         except psycopg2.Error as error:
             self.log_manager.set_error("psycopg2 : Connection error (PostgreSQL) : " \
                         + str(error))
@@ -94,7 +93,8 @@ class sql_helper:
 
     @deprecated_param(version="0.0.4",
                   reason="auto detection of params type",
-                  deprecated_args='params_as_array')
+                  deprecated_args="params_as_array",
+                  deprecated_args_positions="3")
     def select(self, query: str, params: list|dict, params_as_array: bool = True
                 , return_sql_as_text: bool = False):
         """select into array
@@ -135,11 +135,10 @@ class sql_helper:
                 connection.close()
 
 
-    def select_into_dataframe(self, query: str, params, is_geodataframe = False):
+    def select_into_dataframe(self, query: str, params: dict, is_geodataframe = False):
         """select into pandas dataframe
         @returns: dataframe
         """
-
         connection = self.get_connection("alchemy")
         query_formatted = self.format_query(query, False)
         try:
@@ -157,6 +156,7 @@ class sql_helper:
         #     # closing database connection.
         #     if connection:
         #         connection.close()
+
 
     def insert(self, query: str, params_list: list = None, sequence: str = None
                 , params_dict: dict = None

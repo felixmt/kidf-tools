@@ -3,21 +3,19 @@
 """modules imports
 """
 import os
-import pytest
 from unittest import mock
+import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Point
+import pytest
 from tools.sql_helper import sql_helper
 
+### fixtures ###
 @pytest.fixture
 def sql_helper_object():
     """instantiate object as a fixture
     """
     return sql_helper()
-
-# @pytest.fixture
-# def example_date():
-#     """ instantiate date as a fixture
-#     """
-#     return datetime.date(2022, 3, 7)
 
 @pytest.fixture
 def example_db_env():
@@ -33,43 +31,70 @@ def test_constructor(example_db_env):
 
     instance = sql_helper()
     assert isinstance(instance, sql_helper)
+### end fixtures
 
-@mock.patch.dict(os.environ, {"DB_HOSTNAME": "prospective"}, clear=True)  # why need clear=True explained here https://stackoverflow.com/a/67477901/248616
+
+@mock.patch.dict(os.environ, {"DB_HOSTNAME": "prospective"}, clear=True)
+# why need clear=True explained here https://stackoverflow.com/a/67477901/248616
 @mock.patch("psycopg2.connect")
 def test_get_connection(sql_helper_object):
-    # expected = [['fake', 'row', 1], ['fake', 'row', 2]]
-    # with mock.patch('psycopg2.connect') as mock_connect:
-    # mock_cur = mock_con.cursor.return_value  # result of con.cursor(cursor_factory=DictCursor)
-    # mock_cur.fetchall.return_value = expected  # return this when calling cur.fetchall()
-
+    """ test get connection
+    """
     result = sql_helper_object.get_connection()
     result_alchemy = sql_helper_object.get_connection("alchemy")
-    # print(result)
-    # print(type(result))
-    # print(result_alchemy)
-    # print(type(result_alchemy))
+
     assert os.environ["DB_HOSTNAME"] == "prospective"
     assert result == result_alchemy
 
-@mock.patch.dict(os.environ, {"DB_HOSTNAME": "prospective"}, clear=True)  # why need clear=True explained here https://stackoverflow.com/a/67477901/248616
+
+@mock.patch.dict(os.environ, {"DB_HOSTNAME": "prospective"}, clear=True)
+# why need clear=True explained here https://stackoverflow.com/a/67477901/248616
 @mock.patch("psycopg2.connect")
 def test_select(mock_connect, sql_helper_object):
+    """ test select
+    """
     expected = [['fake', 'row', 1], ['fake', 'row', 2]]
     query = "select * from test"
     params = []
-    
+
     mock_con = mock_connect.return_value
     mock_cur = mock_con.cursor.return_value  # result of con.cursor(cursor_factory=DictCursor)
     mock_cur.fetchall.return_value = expected  # return this when calling cur.fetchall()
 
-    result = sql_helper_object.select(query, params, True)
+    result = sql_helper_object.select(query, params)
 
     assert result == expected
 
-# def test_first_dow_in_a_month(date_helper_object, example_date):
-#     """test_first_dow_in_a_month
-#        looking for the first monday (0) in the month of march 2022
-#     """
-#     date = date_helper_object.first_dow_in_a_month(2022, 3, 0)
+    result = sql_helper_object.select(query, params, return_sql_as_text = True)
 
-#     assert date == example_date
+    assert isinstance(result, str)
+
+
+@mock.patch.dict(os.environ, {"DB_HOSTNAME": "prospective.database.com",
+                              "DB_USER": "user",
+                              "DB_PASSWORD": "passwd",
+                              "DB_NAME": "name",
+                              "DB_PORT": "10"}, clear=True)
+# why need clear=True explained here https://stackoverflow.com/a/67477901/248616
+@mock.patch("pandas.read_sql_query")
+def test_select_into_dataframe(mock_read_sql, sql_helper_object):
+    """ test select
+    """
+    df_expected = pd.DataFrame({"name": "df name",
+                                'Latitude': [-34.58, -15.78, -33.45, 4.60, 10.48],
+                                'Longitude': [-58.66, -47.91, -70.66, -74.08, -66.86]})
+    # df_expected['Coordinates'] = list(zip(df_expected.Longitude, df_expected.Latitude))
+    # df_expected['Coordinates'] = df_expected['Coordinates'].apply(Point)
+    # gdf_expected = gpd.GeoDataFrame(df_expected, geometry="Coordinates")
+
+    query = "select * from test"
+    params = {}
+
+    mock_read_sql.return_value = df_expected
+
+    result = sql_helper_object.select_into_dataframe(query, params)
+
+    pd.testing.assert_frame_equal(result, df_expected)
+
+    # mock_read_sql.return_value = gdf_expected
+    # result = sql_helper_object.select_into_dataframe(query, params, is_geodataframe = True)
