@@ -1,6 +1,6 @@
 # https://github.com/microsoft/vscode-python/issues/11909
 [MASTER]
-init-hook='import sys; import dotenv; sys.path.append("./kidfapp")'
+init-hook='import sys; import dotenv; sys.path.append("./tools")'
 # Use multiple processes to speed up Pylint.
 jobs=2
 

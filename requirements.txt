@@ -1,1 +1,20 @@
+python-dotenv
+pyyaml
+
+# database libs
+psycopg2-binary
+psycopg2
+sqlalchemy==1.4.46
+
+# data management libs
+shapely
+pandas
+geopandas
+
+# build library package
 wheel
+
+# testing libs
+pytest
+pytest-cov
+pytest-mock

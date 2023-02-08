@@ -1,7 +1,6 @@
 """modules imports
 """
 import os
-from shapely import wkt
 from sqlalchemy import create_engine
 from dotenv import load_dotenv
 from psycopg2.sql import SQL
@@ -12,6 +11,7 @@ import geopandas as gpd
 import yaml
 from yaml.loader import SafeLoader
 from tools.log_helper import log_helper
+from tools.decorators.deprecations import deprecated_param
 
 class sql_helper:
     """various tools to interact with databases
@@ -35,6 +35,7 @@ class sql_helper:
         """initialize connection
         @returns: connection
         """
+        # get database connection infos
         try:
             db_prefix = "DB" + ("_" if self.db_env != "" else "") + self.db_env
             if os.getenv(db_prefix + "_HOSTNAME") is None:
@@ -49,11 +50,14 @@ class sql_helper:
                 database['port'] = os.getenv(db_prefix + "_PORT")
                 database['name'] = os.getenv(db_prefix + "_NAME")
         except BaseException as error:
-            self.log_manager.set_error("Connection error (postgreSQL) : could not read connection information. " \
+            self.log_manager.set_error(
+                        "Connection error (postgreSQL) : could not read connection information. " \
                         + str(error))
-            raise ConnectionError(str("Connection error (postgreSQL) : could not read connection information."))\
+            raise ConnectionError(str(
+                        "Connection error (postgreSQL) : could not read connection information."))\
                         from None
 
+        # instantiate connection
         try:
             if connection_type == "alchemy":
                 db_uri: str = "postgresql+psycopg2://"
@@ -78,8 +82,9 @@ class sql_helper:
         except psycopg2.Error as error:
             self.log_manager.set_error("psycopg2 : Connection error (PostgreSQL) : " \
                         + str(error))
-            raise ConnectionError(str("psycopg2 : Connection to the database could not be established"))\
-                        from None
+            raise ConnectionError(
+                        str("psycopg2 : Connection to the database could not be established"))\
+                            from None
         except BaseException as error:
             self.log_manager.set_error("Connection error (PostgreSQL) : " \
                         + str(error))
@@ -87,6 +92,9 @@ class sql_helper:
                         from None
 
 
+    @deprecated_param(version="0.0.4",
+                  reason="auto detection of params type",
+                  deprecated_args='params_as_array')
     def select(self, query: str, params: list|dict, params_as_array: bool = True
                 , return_sql_as_text: bool = False):
         """select into array
@@ -94,16 +102,14 @@ class sql_helper:
         """
         connection = self.get_connection()
 
-        parameters = params
-        # if params_as_array:
         if isinstance(params, list):
-            parameters = tuple(params)
+            params = tuple(params)
 
         cursor = connection.cursor()
         query_formatted = self.format_query(query)
 
         try:
-            cursor.execute(query_formatted, parameters)
+            cursor.execute(query_formatted, params)
 
             if not return_sql_as_text:
                 records = cursor.fetchall()
@@ -119,7 +125,7 @@ class sql_helper:
         except psycopg2.Error as error:
             self.log_manager.set_error("Select error (PostgreSQL) : " + str(error))
             self.log_manager.set_error(str(query_formatted))
-            self.log_manager.set_error(" ".join(str(item) for item in parameters))
+            self.log_manager.set_error(" ".join(str(item) for item in params))
             raise BaseException("Select error (PostgreSQL) : " + str(error)) from None
         finally:
             # closing database connection.
@@ -127,6 +133,7 @@ class sql_helper:
                 if cursor:
                     cursor.close()
                 connection.close()
+
 
     def select_into_dataframe(self, query: str, params, is_geodataframe = False):
         """select into pandas dataframe
