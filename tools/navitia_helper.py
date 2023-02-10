@@ -20,8 +20,8 @@ class navitia_helper:
             latitude_start: float,
             longitude_end: float,
             latitude_end: float,
-            request_datetime: str,
-            forbidden_uris: list,
+            request_datetime: str = None,
+            forbidden_uris: list = None,
             force_walking: bool = False):
         """get navitia journey
         @returns: json \
@@ -44,7 +44,7 @@ class navitia_helper:
             params['direct_path'] = "only"
             params['direct_path_mode[]'] = "walking"
 
-        if request_datetime is not None:
+        if request_datetime is not None and request_datetime != "":
             request_datetime = str(request_datetime).replace(
                 " ", "T").replace(
                 ":", "").replace(
@@ -57,13 +57,44 @@ class navitia_helper:
                 params=params,
                 headers=headers,
                 timeout=10) # 10 secs
-            raw_data = response.json()
-            # print(response.url)
 
-            return raw_data
+            return response.json()
         except requests.exceptions.RequestException as error:
             self.log_manager.set_error("Journey error : " + str(error))
             self.log_manager.set_error("from : " + str(longitude_start) +\
                         ";" + str(latitude_start) +\
                         " to : " + str(longitude_end) + ";" + str(latitude_end) +\
-                        " datetime : " + request_datetime)
+                        " datetime : " + str(request_datetime))
+
+
+    def get_isochron(
+            self,
+            longitude: float,
+            latitude: float,
+            min_duration: int,
+            max_duration: int):
+        """get navitia isochron
+        @returns: json \
+        """
+        headers = {
+            "content-type": "application/json; charset=UTF-8",
+            # 'Authorization': 'Basic {}'.format(base64.b64encode(self.token))
+        }
+
+        params = {
+            'from': str(longitude) + ';' + str(latitude),
+            'max_duration': max_duration,
+            'min_duration': min_duration
+        }
+
+        try:
+            response = requests.get(
+                self.url + 'isochrones',
+                params=params,
+                headers=headers,
+                timeout=10)
+
+            return response.json()
+        except requests.exceptions.RequestException as error:
+            self.log_manager.set_error("Isochron error : " + str(error))
+            raise Exception ("Isochron error : " + str(error)) from None

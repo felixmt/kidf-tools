@@ -39,8 +39,8 @@ class sql_helper:
         try:
             db_prefix = "DB" + ("_" if self.db_env != "" else "") + self.db_env
             if os.getenv(db_prefix + "_HOSTNAME") is None:
-                with open('.env.yml') as f:
-                    env = yaml.load(f, Loader=SafeLoader)
+                with open('.env.yml', encoding="utf-8") as file:
+                    env = yaml.load(file, Loader=SafeLoader)
                     database = env['databases'][self.db_env]
             else:
                 database = {}
@@ -158,7 +158,11 @@ class sql_helper:
         #         connection.close()
 
 
-    def insert(self, query: str, params_list: list = None, sequence: str = None
+    @deprecated_param(version="0.0.4",
+                  reason="use params: list|dict instead",
+                  deprecated_args="params_list params_dict",
+                  deprecated_args_positions="2 4")
+    def insert(self, query: str, params: list|dict, params_list: list = None, sequence: str = None
                 , params_dict: dict = None
     ):
         """insert, update, crate, alter queries (writing queries)
@@ -166,15 +170,8 @@ class sql_helper:
         """
         connection = self.get_connection()
 
-        if params_list is None and params_dict is None:
-            self.log_manager.set_error("Insert error (PostgreSQL) : params have to be passed \
-                        to insert function")
-            raise ValueError("Database request error (insert) : params have to be passed \
-                        to insert function") from None
-
-        params = params_dict
-        if params is None:
-            params = tuple(params_list)
+        if isinstance(params, list):
+            params = tuple(params)
 
         query_formatted = self.format_query(query)
         try:
@@ -264,7 +261,7 @@ class sql_helper:
             else:
                 df_data.to_sql(table_name, connection, schema=schema_name, if_exists=if_exists,\
                             index=False, chunksize=chunk_size, method="multi")
-        except psycopg2.Error as error:
+        except BaseException as error:
             self.log_manager.set_error("Insert from dataframe error (PostgreSQL) : " + str(error))
             raise BaseException("Insert from dataframe error (PostgreSQL) : " +\
                         str(error)) from None
@@ -272,7 +269,7 @@ class sql_helper:
         #     # closing database connection.
         #     if connection:
         #         connection.close()
-    
+
     def create(self, schema_name: str, table_name: str, columns: list):
         """create table
         @returns: void
@@ -314,6 +311,9 @@ class sql_helper:
                 connection.close()
 
     def format_query(self, query: str, convert_to_sql: bool = True):
+        """create format_query
+        @returns: SQL
+        """
         query = query.format(
                     schema=self.db_schema, schema_gps_data=self.db_schema_gps_data,
                     schema_insee=self.db_schema_insee, schema_sig=self.db_schema_sig,

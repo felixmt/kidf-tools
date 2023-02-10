@@ -1,5 +1,7 @@
 python-dotenv
 pyyaml
+openpyxl
+requests
 
 # database libs
 psycopg2-binary

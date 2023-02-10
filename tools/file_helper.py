@@ -36,7 +36,7 @@ class file_helper:
             return pd.read_excel(file_path, worksheet_name, header=xlsx_header)
         else:
             raise BaseException(
-                        "File_extension error : " + file_extension + " is not recognized. ")\
+                        "File extension error : " + file_extension + " is not recognized. ")\
                         from None
 
     def write_csv(self, header: str, content: list):
@@ -51,24 +51,20 @@ class file_helper:
             file.write(header)
             file.write(file_content)
 
-        return self.get_file(file_name, "csv")
+            return file
 
-    def write_dataframe_to_csv(self, df: pd.DataFrame):
+    def write_dataframe_to_csv(self, df_data: pd.DataFrame):
         """csv file writer
         """
         file_name = str(uuid.uuid1())
-        df.to_csv(
+        df_data.to_csv(
             self.output_folder + "/" + file_name + ".csv",
             index=False,
             sep=";")
 
-        # with open(self.output_folder + "/" + file_name + ".csv", "a", encoding="utf-8") as file:
-        #     file.write(header)
-        #     file.write(file_content)
+        return self.output_folder + "/" + file_name + ".csv"
 
-        return self.get_file(file_name, "csv")
-
-    def write_xlsx(self, names: list, headers: list, contents: list):
+    def write_xlsx(self, names: list, headers: list[list], contents: list[list[list]]):
         """xlsx file writer
         """
         file_name = str(uuid.uuid1())
@@ -81,11 +77,13 @@ class file_helper:
             wst = wbk.create_sheet(names[idx])
             wst.append(headers[idx])
             for row in content:
+                print(row)
+                print(type(row))
                 wst.append(row)
 
         wbk.save(self.output_folder + '/' + f'{file_name}.xlsx')
 
-        return self.get_file(file_name, "xlsx")
+        return self.output_folder + '/' + f'{file_name}.xlsx'
 
     def write_file(self, file_content: str, file_extension: str):
         """generic file writer
@@ -98,18 +96,4 @@ class file_helper:
         ) as file:
             file.write(file_content)
 
-        return self.get_file(file_name, file_extension)
-
-    def get_file(self, file_path: str, file_extension: str):
-        """returns file from file_path
-        """
-        print("to be finalized")
-    #     # send_from_directory only takes relative paths
-    #     # return send_from_directory(self.output_folder, "."
-    #     #         , filename=file_path + "." + file_extension, as_attachment=True)
-    #     file_name = file_path + "." + file_extension
-    #     try:
-    #         return send_file(self.output_folder + "/" + file_name
-    #                 , file_name, as_attachment=True)
-    #     except FileNotFoundError as error:
-    #         self.log_manager.set_error("Problem while getting file : " + str(error))
+        return file
