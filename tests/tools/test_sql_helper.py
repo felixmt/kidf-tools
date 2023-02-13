@@ -117,6 +117,8 @@ class TestSqlHelper:
 
         result = sql_helper_object.insert(query, params=params)
 
+        result = sql_helper_object.insert(query, params)
+
         assert result == expected
 
 

@@ -161,7 +161,7 @@ class sql_helper:
     @deprecated_param(version="0.0.4",
                   reason="use params: list|dict instead",
                   deprecated_args="params_list params_dict",
-                  deprecated_args_positions="2 4")
+                  deprecated_args_positions="3 5")
     def insert(self, query: str, params: list|dict, params_list: list = None, sequence: str = None
                 , params_dict: dict = None
     ):
