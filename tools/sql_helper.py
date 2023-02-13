@@ -162,8 +162,8 @@ class sql_helper:
                   reason="use params: list|dict instead",
                   deprecated_args="params_list params_dict",
                   deprecated_args_positions="3 5")
-    def insert(self, query: str, params: list|dict, params_list: list = None, sequence: str = None
-                , params_dict: dict = None
+    def insert(self, query: str, params: list|dict, params_list: list = None, sequence: str = None,
+                params_dict: dict = None
     ):
         """insert, update, crate, alter queries (writing queries)
         @returns: int | None
