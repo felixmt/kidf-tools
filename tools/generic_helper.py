@@ -127,8 +127,8 @@ class generic_helper:
         """transform str to datafram
         @return: DataFrame
         """
-        dat = [x.split(separator) for x in string.split(line_end)][1:-1]
-        df = pd.DataFrame(dat)
+        data = [x.split(separator) for x in string.split(line_end)][1:-1]
+        df_data = pd.DataFrame(data)
         if set_header:
-            df = df.T.set_index(0, drop = True).T # flip, set ix, flip back
-        return df
+            df_data = df_data.T.set_index(0, drop = True).T # flip, set ix, flip back
+        return df_data
