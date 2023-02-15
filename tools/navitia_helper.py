@@ -20,8 +20,8 @@ class navitia_helper:
             latitude_start: float,
             longitude_end: float,
             latitude_end: float,
-            request_datetime: str = None,
-            forbidden_uris: list = None,
+            request_datetime: str = "",
+            forbidden_uris: list[str] = [""],
             force_walking: bool = False):
         """get navitia journey
         @returns: json \
@@ -44,7 +44,7 @@ class navitia_helper:
             params['direct_path'] = "only"
             params['direct_path_mode[]'] = "walking"
 
-        if request_datetime is not None and request_datetime != "":
+        if request_datetime != "":
             request_datetime = str(request_datetime).replace(
                 " ", "T").replace(
                 ":", "").replace(
@@ -53,7 +53,7 @@ class navitia_helper:
 
         try:
             response = requests.get(
-                self.url + 'journeys',
+                str(self.url) + 'journeys',
                 params=params,
                 headers=headers,
                 timeout=10) # 10 secs
@@ -87,12 +87,25 @@ class navitia_helper:
             'min_duration': min_duration
         }
 
+        if request_datetime is not None:
+            request_datetime = str(request_datetime).replace(
+                " ", "T").replace(
+                ":", "").replace(
+                "-", "")
+            params['datetime'] = request_datetime
+
         try:
             response = requests.get(
-                self.url + 'isochrones',
+                str(self.url) + 'isochrones',
                 params=params,
                 headers=headers,
                 timeout=10)
+
+            # /!\ Gérer les erreurs
+            if response.status_code != 200:
+                # print('Status:', response.status_code, 'Erreur de requête')
+                self.log_manager.set_error("Navitia isochron request error : " + str(response.json()))
+                # print(response['error']['message'])
 
             return response.json()
         except requests.exceptions.RequestException as error:

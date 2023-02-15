@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.6'
+VERSION = '0.0.7'
 DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 LONG_DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 
