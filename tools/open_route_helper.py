@@ -56,7 +56,7 @@ class open_route_helper:
                 response = response.json()
                 error_message = "Isochron error status " + str(response.status_code)\
                             + ". Open route service post request error : "
-                print(type(response))
+                # print(type(response))
                 if "reason" in response:
                     error_message = error_message + str(response.reason)
 
