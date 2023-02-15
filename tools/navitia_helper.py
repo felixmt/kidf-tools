@@ -72,7 +72,8 @@ class navitia_helper:
             longitude: float,
             latitude: float,
             min_duration: int,
-            max_duration: int):
+            max_duration: int,
+            request_datetime: str = ""):
         """get navitia isochron
         @returns: json \
         """
