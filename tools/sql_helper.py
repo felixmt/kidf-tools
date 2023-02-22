@@ -25,17 +25,16 @@ class sql_helper:
                     env = yaml.load(file, Loader=SafeLoader)
                     database = env['databases'][self.db_env]
             self.db_schema=database["schema"] if "schema" in database else ""
-            # self.db_schema_gps_data=database["schema_gps_data"]
-            # self.db_schema_sig=os.getenv('DB_SCHEMA_SIG')
-            # self.db_schema_insee=os.getenv('DB_SCHEMA_INSEE')
-            # self.db_schema_operator=os.getenv('DB_SCHEMA_OPERATOR')
-            # self.db_schema_administrative_zone=os.getenv('DB_SCHEMA_ADMINISTRATIVE_ZONE')
-            # self.db_schema_calendar=os.getenv('DB_SCHEMA_CALENDAR')
-            # self.db_schema_gtfs=os.getenv('DB_SCHEMA_GTFS')
-            # self.db_schema_idfm=os.getenv('DB_SCHEMA_IDFM')
-            # self.db_schema_keoreport=os.getenv('DB_SCHEMA_KEOREPORT')
-            self.log_manager = log_helper()
-
+            self.db_schema_gps_data=database["schema_gps_data"] if "schema_gps_data" in database else ""
+            self.db_schema_sig=database["schema_sig"] if "schema_sig" in database else ""
+            self.db_schema_insee=database["schema_insee"] if "schema_insee" in database else ""
+            self.db_schema_operator=database["schema_operator"] if "schema_operator" in database else ""
+            self.db_schema_administrative_zone=database["schema_administrative_zone"]\
+                        if "schema_administrative_zone" in database else ""
+            self.db_schema_calendar=database["schema_calendar"] if "schema_calendar" in database else ""
+            self.db_schema_gtfs=database["schema_gtfs"] if "schema_gtfs" in database else ""
+            self.db_schema_idfm=database["schema_idf"] if "schema_idf" in database else ""
+            self.db_schema_keoreport=database["schema_keoreport"] if "schema_keoreport" in database else ""
         else:
             self.db_schema=os.getenv('DB_SCHEMA')
             self.db_schema_gps_data=os.getenv('DB_SCHEMA_GPS_DATA')
@@ -47,7 +46,7 @@ class sql_helper:
             self.db_schema_gtfs=os.getenv('DB_SCHEMA_GTFS')
             self.db_schema_idfm=os.getenv('DB_SCHEMA_IDFM')
             self.db_schema_keoreport=os.getenv('DB_SCHEMA_KEOREPORT')
-            self.log_manager = log_helper()
+        self.log_manager = log_helper()
 
     def get_connection(self, connection_type: str = "psycopg2"):
         """initialize connection
