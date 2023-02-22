@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.0.9'
+VERSION = '0.1.0'
 DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 LONG_DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 
@@ -30,8 +30,6 @@ setup(
         keywords=['python', 'fm tools package'],
         classifiers= [
             "Development Status :: 3 - Alpha",
-            "Intended Audience :: Education",
-            "Programming Language :: Python :: 2",
             "Programming Language :: Python :: 3",
             "Operating System :: MacOS :: MacOS X",
             "Operating System :: Microsoft :: Windows",

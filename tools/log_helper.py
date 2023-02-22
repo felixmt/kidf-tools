@@ -12,7 +12,7 @@ class log_helper:
         load_dotenv()
         self.logging_folder = os.getenv('LOGGING_FOLDER')\
                     if os.getenv('LOGGING_FOLDER') is not None\
-                    else "."
+                    else "./logs/"
         self.current_datetime = datetime.now(timezone.utc)
         self.format = "%(asctime)-15s %(levelname)s %(message)s"
         self.filemode = "a"
@@ -27,7 +27,7 @@ class log_helper:
         logging.error(message)
 
     def set_info(self, message: str, log_file: str = "api_run"):
-        """log errors
+        """log info
         """
         logfile = self.logging_folder + "/" + log_file + "_" \
                         + self.current_datetime.strftime("%Y%m%d") + ".log"
