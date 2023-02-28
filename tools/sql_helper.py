@@ -84,7 +84,7 @@ class sql_helper:
                             str(database['host']) + ":" + \
                             str(database['port']) + "/" + \
                             str(database['name'])
-                return create_engine(db_uri, echo=True)
+                return create_engine(db_uri, echo=False)
 
             connection = psycopg2.connect(user=database['user'],
                                         password=database['password'],
