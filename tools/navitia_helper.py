@@ -22,7 +22,8 @@ class navitia_helper:
             latitude_end: float,
             request_datetime: str = "",
             forbidden_uris: list[str] = [""],
-            force_walking: bool = False):
+            force_walking: bool = False,
+            stop_end: str = ""):
         """get navitia journey
         @returns: json \
         """
@@ -39,6 +40,9 @@ class navitia_helper:
             # add forbidden uris
             'forbidden_uris[]': forbidden_uris
         }
+
+        if stop_end is not None and stop_end != "":
+            params['to'] = stop_end
 
         if force_walking:
             params['direct_path'] = "only"
