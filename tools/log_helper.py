@@ -17,6 +17,10 @@ class log_helper:
         self.format = "%(asctime)-15s %(levelname)s %(message)s"
         self.filemode = "a"
 
+        isExist = os.path.exists(self.logging_folder)
+        if not isExist:
+            os.mkdir(self.logging_folder)
+
     def set_error(self, message: str, log_file: str = "api_run"):
         """log errors
         """
