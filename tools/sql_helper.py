@@ -274,7 +274,7 @@ class sql_helper:
                 df_data.set_geometry(geometry_column)
                 df_data.set_crs(epsg=crs)
                 df_data.to_postgis(table_name, connection, schema=schema_name, if_exists=if_exists,\
-                            index=False, chunksize=chunk_size, method="multi")
+                            index=False, chunksize=chunk_size)
             else:
                 df_data.to_sql(table_name, connection, schema=schema_name, if_exists=if_exists,\
                             index=False, chunksize=chunk_size, method="multi")
