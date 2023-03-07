@@ -25,7 +25,8 @@ setup(
             "sqlalchemy<2",
             "openpyxl",
             "requests",
-            "pyyaml"
+            "pyyaml",
+            "GeoAlchemy2"
         ], # add any additional packages that
         # needs to be installed along with your package. Eg: 'caer'
 
