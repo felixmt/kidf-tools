@@ -2,7 +2,7 @@
 """
 from setuptools import setup, find_packages
 
-VERSION = '0.1.9'
+VERSION = '0.1.9.5'
 DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 LONG_DESCRIPTION = 'Félix Motot python dependencies to deal with data'
 
