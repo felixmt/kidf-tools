@@ -10,7 +10,18 @@ class navitia_helper:
     """
     def __init__(self):
         load_dotenv()
-        self.url = os.getenv('NAVITIA_URL')
+        if os.getenv("NAVITIA_URL") is None:
+            try:
+                with open(".env.yml", encoding="utf-8") as file:
+                    env = yaml.load(file, Loader=SafeLoader)
+                    self.url = env["navitia"]["url"]
+            except BaseException as error:
+                self.log_manager.set_error("Environment file not found : " \
+                            + str(error))
+                raise ConnectionError("Environment file not found : " + str(error))\
+                            from None
+        else:
+            self.url = os.getenv('NAVITIA_URL')
         # self.token=os.getenv('NAVITIA_TOKEN')s
         self.log_manager = log_helper()
 

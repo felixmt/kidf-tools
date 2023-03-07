@@ -21,20 +21,26 @@ class sql_helper:
         self.db_env = db_env
         db_prefix = "DB" + ("_" if self.db_env != "" else "") + self.db_env
         if os.getenv(db_prefix + "_HOSTNAME") is None:
-            with open('.env.yml', encoding="utf-8") as file:
-                    env = yaml.load(file, Loader=SafeLoader)
-                    database = env['databases'][self.db_env]
-            self.db_schema=database["schema"] if "schema" in database else ""
-            self.db_schema_gps_data=database["schema_gps_data"] if "schema_gps_data" in database else ""
-            self.db_schema_sig=database["schema_sig"] if "schema_sig" in database else ""
-            self.db_schema_insee=database["schema_insee"] if "schema_insee" in database else ""
-            self.db_schema_operator=database["schema_operator"] if "schema_operator" in database else ""
-            self.db_schema_administrative_zone=database["schema_administrative_zone"]\
-                        if "schema_administrative_zone" in database else ""
-            self.db_schema_calendar=database["schema_calendar"] if "schema_calendar" in database else ""
-            self.db_schema_gtfs=database["schema_gtfs"] if "schema_gtfs" in database else ""
-            self.db_schema_idfm=database["schema_idf"] if "schema_idf" in database else ""
-            self.db_schema_keoreport=database["schema_keoreport"] if "schema_keoreport" in database else ""
+            try:
+                with open('.env.yml', encoding="utf-8") as file:
+                        env = yaml.load(file, Loader=SafeLoader)
+                        database = env['databases'][self.db_env]
+                self.db_schema=database["schema"] if "schema" in database else ""
+                self.db_schema_gps_data=database["schema_gps_data"] if "schema_gps_data" in database else ""
+                self.db_schema_sig=database["schema_sig"] if "schema_sig" in database else ""
+                self.db_schema_insee=database["schema_insee"] if "schema_insee" in database else ""
+                self.db_schema_operator=database["schema_operator"] if "schema_operator" in database else ""
+                self.db_schema_administrative_zone=database["schema_administrative_zone"]\
+                            if "schema_administrative_zone" in database else ""
+                self.db_schema_calendar=database["schema_calendar"] if "schema_calendar" in database else ""
+                self.db_schema_gtfs=database["schema_gtfs"] if "schema_gtfs" in database else ""
+                self.db_schema_idfm=database["schema_idf"] if "schema_idf" in database else ""
+                self.db_schema_keoreport=database["schema_keoreport"] if "schema_keoreport" in database else ""
+            except BaseException as error:
+                self.log_manager.set_error("Environment file not found : " \
+                            + str(error))
+                raise ConnectionError("Environment file not found : " + str(error))\
+                            from None
         else:
             self.db_schema=os.getenv('DB_SCHEMA')
             self.db_schema_gps_data=os.getenv('DB_SCHEMA_GPS_DATA')
