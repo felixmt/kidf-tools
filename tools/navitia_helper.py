@@ -23,6 +23,7 @@ class navitia_helper:
             request_datetime: str = "",
             forbidden_uris: list[str] = [""],
             force_walking: bool = False,
+            force_car: bool = False,
             stop_end: str = ""):
         """get navitia journey
         @returns: json \
@@ -47,6 +48,9 @@ class navitia_helper:
         if force_walking:
             params['direct_path'] = "only"
             params['direct_path_mode[]'] = "walking"
+        elif force_car:
+            params['direct_path'] = "only"
+            params['direct_path_mode[]'] = "car_no_park"
 
         if request_datetime != "":
             request_datetime = str(request_datetime).replace(
@@ -109,7 +113,8 @@ class navitia_helper:
             # /!\ Gérer les erreurs
             if response.status_code != 200:
                 # print('Status:', response.status_code, 'Erreur de requête')
-                self.log_manager.set_error("Navitia isochron request error : " + str(response.json()))
+                self.log_manager.set_error("Navitia isochron request error : "
+                                           + str(response.json()))
                 # print(response['error']['message'])
 
             return response.json()
