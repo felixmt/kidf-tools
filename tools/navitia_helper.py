@@ -3,6 +3,8 @@
 import os
 from dotenv import load_dotenv
 import requests
+import yaml
+from yaml.loader import SafeLoader
 from tools.log_helper import log_helper
 
 class navitia_helper:
