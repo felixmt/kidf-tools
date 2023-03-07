@@ -64,6 +64,7 @@ class navitia_helper:
         elif force_car:
             params['direct_path'] = "only"
             params['direct_path_mode[]'] = "car_no_park"
+            params['max_car_no_park_direct_path_duration'] = 100000
 
         if request_datetime != "":
             request_datetime = str(request_datetime).replace(
