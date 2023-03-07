@@ -10,6 +10,7 @@ class navitia_helper:
     """
     def __init__(self):
         load_dotenv()
+        self.log_manager = log_helper()
         if os.getenv("NAVITIA_URL") is None:
             try:
                 with open(".env.yml", encoding="utf-8") as file:
@@ -23,7 +24,6 @@ class navitia_helper:
         else:
             self.url = os.getenv('NAVITIA_URL')
         # self.token=os.getenv('NAVITIA_TOKEN')s
-        self.log_manager = log_helper()
 
     def get_journey(
             self,
