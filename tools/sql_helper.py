@@ -18,6 +18,7 @@ class sql_helper:
     """
     def __init__(self, db_env: str = ""):
         load_dotenv()
+        self.log_manager = log_helper()
         self.db_env = db_env
         db_prefix = "DB" + ("_" if self.db_env != "" else "") + self.db_env
         if os.getenv(db_prefix + "_HOSTNAME") is None:
@@ -52,7 +53,6 @@ class sql_helper:
             self.db_schema_gtfs=os.getenv('DB_SCHEMA_GTFS')
             self.db_schema_idfm=os.getenv('DB_SCHEMA_IDFM')
             self.db_schema_keoreport=os.getenv('DB_SCHEMA_KEOREPORT')
-        self.log_manager = log_helper()
 
     def get_connection(self, connection_type: str = "psycopg2"):
         """initialize connection
